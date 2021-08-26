@@ -1,23 +1,27 @@
+import React, { useState, useEffect } from 'react'
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const [persons, setPersons] = useState([]);
+
+  // Run this when our component mounts (we can see it on screen)
+  useEffect(() => {
+    (async () => {
+      // Fetch all persons from backend
+      setPersons(await(await fetch('/api/persons')).json());
+    })();
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {persons.map(({id, firstName, lastName, email, birthDate}) => 
+          <div key={id}>
+            <h3>{firstName} {lastName}</h3>
+            <p>Email: {email}</p>
+            <p>Birth date: {birthDate}</p>
+          </div>
+        )}
     </div>
   );
 }
